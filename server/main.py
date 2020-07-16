@@ -86,7 +86,7 @@ def scrapePrice():
             data[0] = float(data[0])
             data[1] = "none"
         else:
-            data = prices[item].get_text()[2:].split("/")
+            data = prices[item].get_text().strip()[2:].split("/")
             data[0] = float(data[0]) # quantity
             data[1] = data[1][:len(data[1])-1] # unit
         for ingToken in ingredient.split(" "):
