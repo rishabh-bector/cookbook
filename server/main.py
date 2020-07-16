@@ -96,6 +96,8 @@ def scrapePrice():
             combinedPrice += data[0]
             numPrices += 1
 
+    print("final data: " + items + ' ' + titles + ' ' + prices)
+
     finalData = {
         "average": round(combinedPrice / numPrices, 2),
         "unit": unit.lower(),
