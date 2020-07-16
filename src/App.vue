@@ -205,7 +205,7 @@ export default class App extends Vue {
   private statuses: T.TestStatus[] = [];
 
   async calculateIngPrice(ing: C.IngredientData): Promise<C.Amount> {
-    const rest: RM.RestClient = new RM.RestClient('rest', 'http://localhost:5000');
+    const rest: RM.RestClient = new RM.RestClient('rest', 'http://35.206.77.217:5000');
     const search: string = (ing.unit !== C.Unit.None) ? `/ing?ing=${ing.name}&unit=*` : `/ing?ing=${ing.name}&unit=none`
     const res: RM.IRestResponse<PriceResponse> = await rest.get<PriceResponse>(search)
     let resMarshal: PriceResponse = { average: 0, unit: ''}
