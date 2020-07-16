@@ -89,12 +89,13 @@ def scrapePrice():
             data = prices[item].get_text().strip()[2:].split("/")
             data[0] = float(data[0]) # quantity
             data[1] = data[1][:len(data[1])-1] # unit
+        found = True
         for ingToken in ingredient.split(" "):
             if ingToken not in titles[item].get_text().lower():
-                continue
-            if unit.lower() in data[1].lower():
-                combinedPrice += data[0]
-                numPrices += 1
+                found = False
+        if unit.lower() in data[1].lower() and found:
+            combinedPrice += data[0]
+            numPrices += 1
 
     print("final data: " + str(items) + ' ' + str(titles) + ' ' + str(prices))
 
