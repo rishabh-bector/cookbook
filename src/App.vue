@@ -184,8 +184,8 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { IngredientData, VolumeUnits, ConvertUnit, Amount, MassUnits, OuncesToCups, Unit } from "./common/common";
-import { TestCases, TestStatus } from "./tests/tests";
+import * as C from "./common/common";
+import * as T from "./tests/tests";
 import { ParseLine, ParseUnit } from './logic/parser';
 import * as RM from 'typed-rest-client/RestClient';
 
@@ -199,14 +199,14 @@ interface PriceResponse {
 })
 export default class App extends Vue {
   private autogrow = "2 teaspoon vanilla extract";
-  private parsed: IngredientData[] = [];
+  private parsed: C.IngredientData[] = [];
   private stage = 0;
   private theme = "default";
-  private statuses: TestStatus[] = [];
+  private statuses: T.TestStatus[] = [];
 
-  async calculateIngPrice(ing: IngredientData): Promise<Amount> {
+  async calculateIngPrice(ing: C.IngredientData): Promise<C.Amount> {
     const rest: RM.RestClient = new RM.RestClient('rest', 'http://localhost:5000');
-    const search: string = (ing.unit !== Unit.None) ? `/ing?ing=${ing.name}&unit=*` : `/ing?ing=${ing.name}&unit=none`
+    const search: string = (ing.unit !== C.Unit.None) ? `/ing?ing=${ing.name}&unit=*` : `/ing?ing=${ing.name}&unit=none`
     const res: RM.IRestResponse<PriceResponse> = await rest.get<PriceResponse>(search)
     let resMarshal: PriceResponse = { average: 0, unit: ''}
     if (res.result) resMarshal = res.result;
@@ -227,47 +227,47 @@ export default class App extends Vue {
     //        c. As a fallback, ask the user to input their original amount in this new unit.
 
     // No need for conversion
-    if (parsedUnit === ing.unit || ing.unit === Unit.None) {
+    if (parsedUnit === ing.unit || ing.unit === C.Unit.None) {
       return {
         quantity: resMarshal.average,
         unit: parsedUnit,
       };
     }
 
-    const price: Amount = {quantity: resMarshal.average, unit: parsedUnit};
+    const price: C.Amount = {quantity: resMarshal.average, unit: parsedUnit};
     console.log('Got price: ' + JSON.stringify(price));
 
     // Volume -> volume conversion
-    if (VolumeUnits.includes(parsedUnit) && VolumeUnits.includes(ing.unit)) {
-      return ConvertUnit(price, ing.unit);
+    if (C.VolumeUnits.includes(parsedUnit) && C.VolumeUnits.includes(ing.unit)) {
+      return C.ConvertUnit(price, ing.unit);
     }
 
     // Mass -> mass conversion
-    if (MassUnits.includes(parsedUnit) && MassUnits.includes(ing.unit)) {
-      return ConvertUnit(price, ing.unit);
+    if (C.MassUnits.includes(parsedUnit) && C.MassUnits.includes(ing.unit)) {
+      return C.ConvertUnit(price, ing.unit);
     }
 
     // Try cache lookup
     let conversionFactor = null;
-    Object.keys(OuncesToCups).forEach((ingName) => {
-      if (ing.name.includes(ingName)) conversionFactor = OuncesToCups[ingName];
+    Object.keys(C.OuncesToCups).forEach((ingName) => {
+      if (ing.name.includes(ingName)) conversionFactor = C.OuncesToCups[ingName];
     })
     if (conversionFactor) {
       price.quantity = price.quantity * conversionFactor;
-      return ConvertUnit(price, ing.unit);
+      return C.ConvertUnit(price, ing.unit);
     }
 
     return {
       quantity: -1,
-      unit: Unit.None,
+      unit: C.Unit.None,
     };
   }
 
-  private makeLabel(item: IngredientData): string {
+  private makeLabel(item: C.IngredientData): string {
     return `Cost / ${this.displayPriceOf(item).unit}`;
   }
 
-  private makeLink(item: IngredientData): string {
+  private makeLink(item: C.IngredientData): string {
     return `https://www.heb.com/search/?q=${item.name}`;
   }
 
@@ -298,13 +298,13 @@ export default class App extends Vue {
   private runTests() {
     this.stage = -1;
     this.statuses = [];
-    TestCases.forEach(tc => {
+    T.TestCases.forEach(tc => {
       this.statuses.push({
         name: tc.name,
         status: "NOT STARTED"
       });
     });
-    TestCases.forEach(tc => {
+    T.TestCases.forEach(tc => {
       const statusDataMaybe = this.statuses.find(s => s.name == tc.name);
       let statusData = this.statuses[0];
       if (statusDataMaybe) statusData = statusDataMaybe;
@@ -340,7 +340,7 @@ export default class App extends Vue {
     });
   }
 
-  private displayPriceOf(ing: IngredientData): Amount {
+  private displayPriceOf(ing: C.IngredientData): C.Amount {
     if (ing.price) return ing.price;
     return {
       quantity: 0,
@@ -369,7 +369,7 @@ export default class App extends Vue {
     this.theme = "default";
   }
 
-  get testStatus(): TestStatus[] {
+  get testStatus(): T.TestStatus[] {
     return this.statuses;
   }
 

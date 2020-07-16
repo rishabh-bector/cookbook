@@ -1,4 +1,4 @@
-import { IngredientData, Unit } from "../common/common";
+import * as C from "../common/common";
 
 export interface TestStatus {
   name: string;
@@ -9,7 +9,7 @@ export interface TestCase {
   name: string;
   link: string;
   input: string;
-  output: IngredientData[];
+  output: C.IngredientData[];
 }
 
 export const TestCases: TestCase[] = [
@@ -24,22 +24,22 @@ export const TestCases: TestCase[] = [
       {
         name: "large russet potatoes",
         quantity: 3,
-        unit: Unit.None,
+        unit: C.Unit.None,
       },
       {
         name: "olive oil",
         quantity: 2,
-        unit: Unit.Tablespoon,
+        unit: C.Unit.Tablespoon,
       },
       {
         name: "butter",
         quantity: 1,
-        unit: Unit.Tablespoon,
+        unit: C.Unit.Tablespoon,
       },
       {
         name: "paprika",
         quantity: 0.25,
-        unit: Unit.Teaspoon,
+        unit: C.Unit.Teaspoon,
       },
     ],
   },
@@ -57,37 +57,37 @@ export const TestCases: TestCase[] = [
       {
         name: "unsalted butter",
         quantity: 2,
-        unit: Unit.Tablespoon,
+        unit: C.Unit.Tablespoon,
       },
       {
         name: "light brown sugar",
         quantity: 1/4,
-        unit: Unit.Cup,
+        unit: C.Unit.Cup,
       },
       {
         name: "vanilla extract",
         quantity: 1/2,
-        unit: Unit.Teaspoon,
+        unit: C.Unit.Teaspoon,
       },
       {
         name: "beaten egg",
         quantity: 2,
-        unit: Unit.Tablespoon,
+        unit: C.Unit.Tablespoon,
       },
       {
         name: "all-purpose flour",
         quantity: 6,
-        unit: Unit.Tablespoon,
+        unit: C.Unit.Tablespoon,
       },
       {
         name: "kosher salt",
         quantity: 0.125,
-        unit: Unit.Teaspoon,
+        unit: C.Unit.Teaspoon,
       },
       {
         name: "semi-sweet chocolate chips",
         quantity: 5.5,
-        unit: Unit.Tablespoon,
+        unit: C.Unit.Tablespoon,
       },
     ],
   },

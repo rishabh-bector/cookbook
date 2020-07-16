@@ -1,11 +1,6 @@
-import {
-  IngredientData,
-  Unit,
-  UnitStrings,
-  FracMap
-} from "../common/common";
+import * as C from "../common/common";
 
-export function ParseUnit(token: string): Unit {
+export function ParseUnit(token: string): C.Unit {
   const processed = token.toLowerCase();
   const doesIncludeArray = (input: string, terms: string[]): boolean => {
     for (let i = 0; i < terms.length; i++) {
@@ -15,24 +10,24 @@ export function ParseUnit(token: string): Unit {
   };
 
   // Volume
-  if (doesIncludeArray(processed, UnitStrings.cup)) return Unit.Cup;
-  if (doesIncludeArray(processed, UnitStrings.tablespoon)) return Unit.Tablespoon;
-  if (doesIncludeArray(processed, UnitStrings.teaspoon)) return Unit.Teaspoon;
-  if (doesIncludeArray(processed, UnitStrings.fluidounce)) return Unit.FluidOunce;
+  if (doesIncludeArray(processed, C.UnitStrings.cup)) return C.Unit.Cup;
+  if (doesIncludeArray(processed, C.UnitStrings.tablespoon)) return C.Unit.Tablespoon;
+  if (doesIncludeArray(processed, C.UnitStrings.teaspoon)) return C.Unit.Teaspoon;
+  if (doesIncludeArray(processed, C.UnitStrings.fluidounce)) return C.Unit.FluidOunce;
 
   // Mass
-  if (doesIncludeArray(processed, UnitStrings.ounce)) return Unit.Ounce;
-  if (doesIncludeArray(processed, UnitStrings.pound)) return Unit.Pound;
-  if (doesIncludeArray(processed, UnitStrings.kilogram)) return Unit.Kilogram;
-  if (doesIncludeArray(processed, UnitStrings.milligram)) return Unit.Milligram;
+  if (doesIncludeArray(processed, C.UnitStrings.ounce)) return C.Unit.Ounce;
+  if (doesIncludeArray(processed, C.UnitStrings.pound)) return C.Unit.Pound;
+  if (doesIncludeArray(processed, C.UnitStrings.kilogram)) return C.Unit.Kilogram;
+  if (doesIncludeArray(processed, C.UnitStrings.milligram)) return C.Unit.Milligram;
 
-  return Unit.None;
+  return C.Unit.None;
 }
 
 function isQuantity(token: string): boolean {
   const chars = token.split("");
   for (let i = 0; i < chars.length; i++) {
-    if (chars[i] in FracMap) {
+    if (chars[i] in C.FracMap) {
       continue;
     }
     if (isNaN(Number(chars[i])) && chars[i] !== "/" && chars[i] !== ".")
@@ -45,8 +40,8 @@ function parseQuantity(token: string): number {
   const chars = token.split("");
   let shouldEval = false;
   for (let i = 0; i < chars.length; i++) {
-    if (chars[i] in FracMap) {
-      chars[i] = FracMap[chars[i]];
+    if (chars[i] in C.FracMap) {
+      chars[i] = C.FracMap[chars[i]];
       shouldEval = true;
     }
   }
@@ -61,11 +56,11 @@ function parseQuantity(token: string): number {
   return Number(token);
 }
 
-export function ParseLine(line: string): IngredientData {
+export function ParseLine(line: string): C.IngredientData {
   const ingredient = {
     name: "",
     quantity: 0,
-    unit: Unit.None
+    unit: C.Unit.None
   };
 
   const tokens = line.trim().split(" ");
@@ -78,7 +73,7 @@ export function ParseLine(line: string): IngredientData {
     
     // Unit
     const parsedUnit = ParseUnit(tokens[i]);
-    if (parsedUnit != Unit.None) {
+    if (parsedUnit != C.Unit.None) {
       ingredient.unit = parsedUnit;
       continue;
     }

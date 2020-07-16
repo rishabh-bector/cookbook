@@ -5,6 +5,8 @@ export interface IngredientData {
   price?: Amount;
 }
 
+/* eslint-disable no-unused-vars */
+
 export enum Unit {
   // Volume
   Cup = "Cup",
